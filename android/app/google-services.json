@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "59202183466",
+    "project_id": "proyect-desfc",
+    "storage_bucket": "proyect-desfc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59202183466:android:98fdd4aa86cea5acf1be53",
+        "android_client_info": {
+          "package_name": "com.cristian.projectapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPjsE4Y2dmzHwW37hYJ50wdEIWKohnR30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
