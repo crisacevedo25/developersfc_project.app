@@ -15,17 +15,17 @@ class _FacturationState extends State<Facturation> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: const Text("Facturación", style: TextStyle(color: Colors.white)),
+        title: const Text("Facturacion", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(8),
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Image.asset(
+              'assets/img/Logo1.jpg',
+              fit: BoxFit.contain,
             ),
-            child: const Center(
-                child: Text("Logo", style: TextStyle(color: Colors.white))),
           ),
         ),
       ),

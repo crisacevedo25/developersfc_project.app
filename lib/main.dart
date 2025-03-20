@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
         // "home" <- no se puede utilizar
         "init": (context) => Login(),
         // "app-controller": (context) => MyTabController(),
-        "app-controller": (context) => MyBottomNavigationBar(),
         "third-screen": (context) => ThirdScreen(),
         "register": (context) => Register(),
         "search": (context) => SearchScreen(),
+        "home": (context) => const MyBottomNavigationBar(),
       },
     );
   }

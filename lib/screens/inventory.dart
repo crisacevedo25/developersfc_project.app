@@ -3,14 +3,14 @@ import 'product_item.dart';
 import '../adapters/dio_adapter.dart';
 import '../models/product.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Inventory extends StatefulWidget {
+  const Inventory({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Inventory> createState() => _InventoryState();
 }
 
-class _HomeState extends State<Home> {
+class _InventoryState extends State<Inventory> {
   List<Product> _products = [];
   bool _hasLoaded = false;
 
@@ -46,6 +46,22 @@ class _HomeState extends State<Home> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: const Text("Inventario", style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Image.asset(
+              'assets/img/Logo1.jpg',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
       body: GridView.count(
         padding: const EdgeInsets.all(20),
         crossAxisCount: 1,

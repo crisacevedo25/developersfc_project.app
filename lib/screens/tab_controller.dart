@@ -30,7 +30,7 @@ class _MyTabController extends State<MyTabController> {
           ),
           body: TabBarView(children: [
             MainMenu(),
-            Home(),
+            Inventory(),
             Facturation(),
             SalesRegister(),
             Profile()

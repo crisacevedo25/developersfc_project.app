@@ -9,16 +9,20 @@ class SalesRegister extends StatelessWidget {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: const Text(
-          "Registro",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: const Text("Registro Ventas",
+            style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Image.asset(
+              'assets/img/Logo1.jpg',
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          )
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
