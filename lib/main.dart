@@ -28,9 +28,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: 'init',
       routes: {
-        // "home" <- no se puede utilizar
         "init": (context) => Login(),
-        // "app-controller": (context) => MyTabController(),
         "third-screen": (context) => ThirdScreen(),
         "register": (context) => Register(),
         "search": (context) => SearchScreen(),

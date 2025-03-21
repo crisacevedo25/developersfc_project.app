@@ -23,10 +23,8 @@ class Product {
     final fields = json['fields'] as Map<String, dynamic>? ?? {};
 
     return Product(
-      id: json['name']?.split('/')?.last ??
-          'unknown', // Si es null, asigna 'unknown'
-      image: fields['image']?['stringValue'] as String? ??
-          '', // Si es null, usa ''
+      id: json['name']?.split('/')?.last ?? 'unknown',
+      image: fields['image']?['stringValue'] as String? ?? '',
       nombre: fields['nombre']?['stringValue'] as String? ?? '',
       category: ProductType.values[
           int.tryParse(fields['category']?['integerValue'] as String? ?? '0') ??

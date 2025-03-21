@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/product.dart';
 
 class ProductItem extends StatefulWidget {
@@ -10,6 +11,82 @@ class ProductItem extends StatefulWidget {
 }
 
 class _ProductItemState extends State<ProductItem> {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  void _editProduct() {
+    TextEditingController nameController =
+        TextEditingController(text: widget.product.nombre);
+    TextEditingController priceCompController =
+        TextEditingController(text: widget.product.preciocomp.toString());
+    TextEditingController priceVentController =
+        TextEditingController(text: widget.product.preciovent.toString());
+    TextEditingController quantityController =
+        TextEditingController(text: widget.product.cant.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Editar Producto"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: "Nombre")),
+            TextField(
+                controller: priceCompController,
+                decoration: const InputDecoration(labelText: "Precio Compra")),
+            TextField(
+                controller: priceVentController,
+                decoration: const InputDecoration(labelText: "Precio Venta")),
+            TextField(
+                controller: quantityController,
+                decoration: const InputDecoration(labelText: "Cantidad")),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              "Cancelar",
+              style: TextStyle(
+                color: Colors.redAccent,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await _db.collection("productos").doc(widget.product.id).update({
+                "nombre": nameController.text,
+                "preciocomp": int.tryParse(priceCompController.text),
+                "preciovent": int.tryParse(priceVentController.text),
+                "cant": int.parse(quantityController.text),
+              });
+              setState(() {
+                widget.product.nombre = nameController.text;
+                widget.product.preciocomp = int.parse(priceCompController.text);
+                widget.product.preciovent = int.parse(priceVentController.text);
+                widget.product.cant = int.parse(quantityController.text);
+              });
+              Navigator.pop(context);
+            },
+            child: const Text(
+              "Guardar",
+              style: TextStyle(
+                color: Colors.redAccent,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteProduct() async {
+    await _db.collection("productos").doc(widget.product.id).delete();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -18,14 +95,13 @@ class _ProductItemState extends State<ProductItem> {
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center, // Alineación centrada
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Imagen del producto más grande y rectangular
             Container(
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: Colors.purple,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
                   image: NetworkImage(widget.product.image),
@@ -34,18 +110,12 @@ class _ProductItemState extends State<ProductItem> {
                       const AssetImage('assets/placeholder.png'),
                 ),
               ),
-              child: widget.product.image.isEmpty
-                  ? const Icon(Icons.attach_money,
-                      color: Colors.white, size: 40)
-                  : null,
             ),
             const SizedBox(width: 10),
-            // Columna con la información del producto
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Alinea al centro verticalmente
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     widget.product.nombre,
@@ -55,11 +125,11 @@ class _ProductItemState extends State<ProductItem> {
                     maxLines: 1,
                   ),
                   Text(
-                    "Compra: \$${widget.product.preciocomp}",
+                    "Compra: L${widget.product.preciocomp}",
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   Text(
-                    "Venta: \$${widget.product.preciovent}", // Suponiendo un 20% más para venta
+                    "Venta: L${widget.product.preciovent}",
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   Text(
@@ -78,17 +148,15 @@ class _ProductItemState extends State<ProductItem> {
                 ],
               ),
             ),
-            // Botón de editar
             Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Centrar los botones
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () => print("Editar producto"),
+                  onPressed: _editProduct,
                   icon: const Icon(Icons.edit, color: Colors.blue),
                 ),
                 IconButton(
-                  onPressed: () => print("Eliminar producto"),
+                  onPressed: _deleteProduct,
                   icon: const Icon(Icons.delete, color: Colors.red),
                 ),
               ],

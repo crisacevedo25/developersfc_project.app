@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'product_item.dart';
+import 'product_form.dart';
 import '../adapters/dio_adapter.dart';
 import '../models/product.dart';
 
@@ -14,7 +15,6 @@ class _InventoryState extends State<Inventory> {
   List<Product> _products = [];
   bool _hasLoaded = false;
 
-  // instancia de dio
   final DioAdapter _dioAdapter = DioAdapter();
 
   @override
@@ -47,7 +47,7 @@ class _InventoryState extends State<Inventory> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.redAccent,
         title: const Text("Inventario", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         leading: Padding(
@@ -71,10 +71,18 @@ class _InventoryState extends State<Inventory> {
         children: _renderProduct(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("=========================================> Click on add");
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductForm(isEditing: false)),
+          );
+
+          if (result == true) {
+            _getProducts();
+          }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

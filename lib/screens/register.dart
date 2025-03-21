@@ -43,7 +43,6 @@ class _RegisterState extends State<Register>
         dynamic authResponse = await Auth.createUserWithEmailAndPassword(
             _user.email, _user.password);
         _user.setUid(authResponse.user.uid);
-        //_user.setProfilePicture();
         dynamic response = await DioAdapter().postRequest(
             'https://firestore.googleapis.com/v1/projects/proyect-desfc/databases/(default)/documents/users',
             _user.toFirestoreRestMap());
@@ -68,7 +67,7 @@ class _RegisterState extends State<Register>
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: const Text("Crear usuario"),
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.redAccent,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -92,13 +91,14 @@ class _RegisterState extends State<Register>
                 _buildTextField("Ingresa tu email", "Tuemail@correo.com",
                     (value) => _user.email = value!),
                 const SizedBox(height: 10),
-                _buildTextField("Crea una contraseña", "*",
+                _buildTextField("Crea una contraseña", "******",
                     (value) => _user.password = value!,
                     isPassword: true),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _onSubmit(context),
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.purple,
+                      backgroundColor: Colors.redAccent,
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 50)),
                   child: const Text("Registrarme"),

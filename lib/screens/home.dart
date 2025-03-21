@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'bottom_navbar.dart'; // Importa tu NavBar aquí
+import 'bottom_navbar.dart';
 
 class MainMenu extends StatelessWidget {
   @override
@@ -9,7 +9,6 @@ class MainMenu extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Logo con tamaño reducido
           SizedBox(
             width: 150,
             height: 150,
@@ -18,9 +17,7 @@ class MainMenu extends StatelessWidget {
               fit: BoxFit.contain,
             ),
           ),
-          const SizedBox(height: 30), // Espacio entre logo y botones
-
-          // Botones en grid
+          const SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GridView.count(
@@ -59,7 +56,6 @@ class MainMenu extends StatelessWidget {
     );
   }
 
-  // Función para navegar al NavBar con el índice correspondiente
   void _navigateToPage(BuildContext context, int index) {
     Navigator.push(
       context,
@@ -69,8 +65,6 @@ class MainMenu extends StatelessWidget {
   }
 }
 
-// ---------------------
-// Widget _MenuItem (Sin cambios)
 class _MenuItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -99,7 +93,7 @@ class _MenuItem extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 40, color: Colors.blue),
+              Icon(icon, size: 40, color: Colors.redAccent),
               const SizedBox(height: 8),
               Text(label, style: const TextStyle(fontSize: 16)),
             ],

@@ -121,7 +121,24 @@ class _Login extends State<Login> {
                       children: [
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: "Email", border: OutlineInputBorder()),
+                            labelText: "Correo",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            border: OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.redAccent,
+                                width: 2.0,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Ingrese un correo válido';
@@ -137,8 +154,24 @@ class _Login extends State<Login> {
                         TextFormField(
                           obscureText: true,
                           decoration: InputDecoration(
-                              labelText: "Password",
-                              border: OutlineInputBorder()),
+                            labelText: "Contraseña",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            border: OutlineInputBorder(),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.redAccent,
+                                width: 2.0,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Ingrese una contraseña';
@@ -158,7 +191,7 @@ class _Login extends State<Login> {
                         ElevatedButton(
                           onPressed: () => _login(context),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple,
+                            backgroundColor: Colors.redAccent,
                             foregroundColor: Colors.white,
                             minimumSize: Size(double.infinity, 50),
                           ),
@@ -174,7 +207,12 @@ class _Login extends State<Login> {
                 onPressed: () => _goToRegister(context),
                 style: OutlinedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50)),
-                child: Text("Registrarse"),
+                child: const Text(
+                  "Registrarse",
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                  ),
+                ),
               ),
             ],
           ),

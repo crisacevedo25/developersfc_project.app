@@ -15,6 +15,7 @@ class _ProfileState extends State<Profile> {
   final Db _db = Db();
   Map<String, dynamic>? _userData;
   bool isEditing = false;
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
@@ -25,19 +26,21 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _fetchUserData() async {
-    try {
-      String? userData = await _localStorage.getUser();
-      if (userData != null) {
-        final Map<String, dynamic> userDataMap = jsonDecode(userData);
+    String userData = await _localStorage.getUser();
+    final Map<String, dynamic> userDataMap = jsonDecode(userData);
 
-        setState(() {
-          _userData = userDataMap;
-          nameController.text = _userData?["fullname"] ?? "Desconocido";
-          emailController.text = _userData?["email"] ?? "No disponible";
-        });
-      }
-    } catch (e) {
-      print("Error al obtener los datos del usuario: $e");
+    Map<String, dynamic>? firestoreData =
+        await _db.getUserData(userDataMap["uid"]);
+
+    if (firestoreData != null) {
+      setState(() {
+        _userData = firestoreData;
+        usernameController.text = _userData!["username"];
+        nameController.text = _userData!["fullname"];
+        emailController.text = _userData!["email"];
+
+        _userData!["docId"] = firestoreData["docId"];
+      });
     }
   }
 
@@ -53,16 +56,23 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _saveChanges() async {
-    if (_userData != null) {
+    if (_userData != null && _userData!["docId"] != null) {
+      String docId = _userData!["docId"];
+
+      print("Actualizando usuario con document ID: $docId");
+
+      _userData!["username"] = usernameController.text;
       _userData!["fullname"] = nameController.text;
       _userData!["email"] = emailController.text;
 
-      await _db.updateUserData(_userData!["uid"], _userData!);
+      await _db.updateUserData(docId, _userData!);
       await _localStorage.setUser(jsonEncode(_userData));
 
       setState(() {
         isEditing = false;
       });
+    } else {
+      print("Error: No se encontró el ID del documento del usuario.");
     }
   }
 
@@ -70,8 +80,20 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Perfil"),
+        backgroundColor: Colors.redAccent,
+        title: const Text("Perfil", style: TextStyle(color: Colors.white)),
         centerTitle: true,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Image.asset(
+              'assets/img/Logo1.jpg',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -80,17 +102,11 @@ class _ProfileState extends State<Profile> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    /*child: _userData?["profilePicture"] != null &&
-                            _userData?["profilePicture"].toString().isNotEmpty
-                        ? Image.network(
-                            _userData!["profilePicture"],
-                            width: 100.0,
-                            height: 100.0,
-                            fit: BoxFit.cover,
-                          )
-                        : const Icon(Icons.person, size: 100.0),*/
+                  const SizedBox(height: 16.0),
+                  TextField(
+                    controller: usernameController,
+                    enabled: isEditing,
+                    decoration: const InputDecoration(labelText: "Username"),
                   ),
                   const SizedBox(height: 16.0),
                   TextField(
@@ -108,16 +124,31 @@ class _ProfileState extends State<Profile> {
                   isEditing
                       ? ElevatedButton(
                           onPressed: _saveChanges,
-                          child: const Text("Guardar cambios"),
+                          child: const Text(
+                            "Guardar cambios",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          ),
                         )
                       : ElevatedButton(
                           onPressed: _toggleEditing,
-                          child: const Text("Editar"),
+                          child: const Text(
+                            "Editar",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                            ),
+                          ),
                         ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () => _logOut(context),
-                    child: const Text("Cerrar sesión"),
+                    child: const Text(
+                      "Cerrar sesión",
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -12,22 +12,19 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  // states
   late List<Product> _productsState;
   bool _hasLoaded = false;
-  // values
 
   List<Product> _products = [];
   final DioAdapter _dioAdapter = DioAdapter();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _setProduts(null);
+    _setProducts(null);
   }
 
-  Future<void> _setProduts(ProductType? pType) async {
+  Future<void> _setProducts(ProductType? pType) async {
     List<Product> p;
     setState(() {
       _hasLoaded = false;
@@ -52,9 +49,6 @@ class _SearchScreenState extends State<SearchScreen> {
     List<Widget> pWidgetTile = [];
     for (final p in _productsState) {
       pWidgetTile.add(_ProductTile(product: p));
-      pWidgetTile.add(Divider(
-        height: 0,
-      ));
     }
     return pWidgetTile;
   }
@@ -64,7 +58,7 @@ class _SearchScreenState extends State<SearchScreen> {
     if (!_hasLoaded) return _SearchLoading();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search Item"),
+        title: const Text("Búsqueda"),
       ),
       body: Column(
         children: [
@@ -72,20 +66,38 @@ class _SearchScreenState extends State<SearchScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ElevatedButton(
-                  onPressed: () {
-                    _setProduts(ProductType.GALLETAS);
-                  },
-                  child: const Text("Galletas")),
+                onPressed: () {
+                  _setProducts(ProductType.GALLETAS);
+                },
+                child: const Text(
+                  "Galletas",
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                  ),
+                ),
+              ),
               ElevatedButton(
-                  onPressed: () {
-                    _setProduts(ProductType.DULCES);
-                  },
-                  child: const Text("Dulces")),
+                onPressed: () {
+                  _setProducts(ProductType.DULCES);
+                },
+                child: const Text(
+                  "Dulces",
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                  ),
+                ),
+              ),
               ElevatedButton(
-                  onPressed: () {
-                    _setProduts(ProductType.CHURROS);
-                  },
-                  child: const Text("Churros")),
+                onPressed: () {
+                  _setProducts(ProductType.CHURROS);
+                },
+                child: const Text(
+                  "Churros",
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                  ),
+                ),
+              ),
             ],
           ),
           Expanded(
@@ -98,14 +110,12 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-// stateless widget
-
 class _SearchLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Search Item"),
+          title: const Text("Búsqueda"),
         ),
         body: Center(child: CircularProgressIndicator()));
   }
@@ -118,37 +128,55 @@ class _ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Image.network(
-        product.image,
-        width: 80,
-        height: 200,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.error);
-        },
-      ),
-      title: Row(
-        children: [
-          Text(product.nombre),
-          SizedBox(
-            width: 5,
-          ),
-          Text(
-            "\$ ${product.preciovent}",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.green,
-              fontWeight: FontWeight.bold,
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                  image: NetworkImage(product.image),
+                  fit: BoxFit.cover,
+                  onError: (error, stackTrace) =>
+                      const AssetImage('assets/placeholder.png'),
+                ),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    product.nombre,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                  Text(
+                    "Compra: L${product.preciocomp}",
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  Text(
+                    "Venta: L${product.preciovent}",
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-      trailing: IconButton(
-          onPressed: () {
-            print("Delete item");
-          },
-          icon: Icon(Icons.shopping_basket)),
     );
   }
 }

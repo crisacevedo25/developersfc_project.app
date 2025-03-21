@@ -7,24 +7,40 @@ class Db {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await _db.collection('users').where('uid', isEqualTo: uid).get();
+
       if (querySnapshot.docs.isNotEmpty) {
-        Map<String, dynamic> userData = querySnapshot.docs.first.data();
+        DocumentSnapshot<Map<String, dynamic>> userDoc =
+            querySnapshot.docs.first;
+        Map<String, dynamic> userData = userDoc.data()!;
+
+        userData["docId"] = userDoc.id;
+
         return userData;
       }
       return null;
     } catch (e) {
-      print('error ocurred calling Firebase!: $e');
+      print('Error obteniendo datos de usuario: $e');
       return null;
     }
   }
 
-  Future<bool> updateUserData(String uid, Map<String, dynamic> newData) async {
+  Future<void> updateUserData(String docId, Map<String, dynamic> data) async {
     try {
-      await _db.collection('users').doc(uid).update(newData);
-      return true;
+      DocumentReference userRef = _db.collection("users").doc(docId);
+      DocumentSnapshot userDoc = await userRef.get();
+
+      if (!userDoc.exists) {
+        print("El usuario con ID $docId no existe en Firestore.");
+        return;
+      }
+
+      data.remove("docId");
+      data.remove("id");
+
+      await userRef.update(data);
+      print("Usuario actualizado correctamente en Firestore.");
     } catch (e) {
-      print('Error updating user data: $e');
-      return false;
+      print("Error actualizando datos del usuario: $e");
     }
   }
 }

@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-
 class ThirdScreen extends StatefulWidget {
   const ThirdScreen({super.key});
 
-
   @override
   State<ThirdScreen> createState() => _ThirdScreen();
-  
 }
 
 class _ThirdScreen extends State<ThirdScreen> {
-
   void _goToAppController(BuildContext context) {
     Navigator.pushNamed(context, 'app-controller');
   }
@@ -25,12 +21,12 @@ class _ThirdScreen extends State<ThirdScreen> {
       body: Container(
         child: Center(
           child: ElevatedButton(
-            onPressed: () { _goToAppController(context); },
-            child: const Text("Go back")),
+              onPressed: () {
+                _goToAppController(context);
+              },
+              child: const Text("Go back")),
         ),
       ),
     );
   }
-
-  
 }
