@@ -14,8 +14,28 @@ class _FactureItemState extends State<FactureItem> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   void _deleteFacture() async {
-    await _db.collection("facturas").doc(widget.facture.id).delete();
-    setState(() {});
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Eliminar Producto"),
+        content:
+            const Text("¿Estás seguro de que deseas eliminar este producto?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
+          TextButton(
+            onPressed: () async {
+              await _db.collection("facturas").doc(widget.facture.id).delete();
+              Navigator.pop(context);
+              setState(() {});
+            },
+            child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

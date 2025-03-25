@@ -82,9 +82,29 @@ class _ProductItemState extends State<ProductItem> {
     );
   }
 
-  void _deleteProduct() async {
-    await _db.collection("productos").doc(widget.product.id).delete();
-    setState(() {});
+  void _deleteProduct() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Eliminar Producto"),
+        content:
+            const Text("¿Estás seguro de que deseas eliminar este producto?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar", style: TextStyle(color: Colors.blue)),
+          ),
+          TextButton(
+            onPressed: () async {
+              await _db.collection("productos").doc(widget.product.id).delete();
+              Navigator.pop(context);
+              setState(() {});
+            },
+            child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -14,26 +14,47 @@ class FactureForm extends StatefulWidget {
 
 class _FactureFormState extends State<FactureForm> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _descriptionController;
   late TextEditingController _totalController;
   late TextEditingController _cantController;
   FactureType _selectedCategory = FactureType.Compra;
+  String? _selectedDescription;
+
+  final List<String> _descriptions = [
+    "Chapetin",
+    "Pindy",
+    "Chiclin",
+    "Millow Corazón",
+    "MiniBum",
+    "Chao",
+    "Barrilete",
+    "Espumilla",
+    "Alka",
+    "Bianchi",
+    "Yerbabuena",
+    "Zambo Picante",
+    "Cappy Infladito",
+    "Ranchita Queso",
+    "Chicharrón Picante",
+    "Ziba Azul",
+    "Doradita",
+    "Conserva",
+    "Damy",
+    "Yumix Picante"
+  ];
 
   @override
   void initState() {
     super.initState();
-    _descriptionController =
-        TextEditingController(text: widget.facture?.description ?? "");
     _totalController =
         TextEditingController(text: widget.facture?.total.toString() ?? "0");
     _cantController =
         TextEditingController(text: widget.facture?.cant.toString() ?? "0");
     _selectedCategory = widget.facture?.category ?? FactureType.Compra;
+    _selectedDescription = widget.facture?.description;
   }
 
   @override
   void dispose() {
-    _descriptionController.dispose();
     _totalController.dispose();
     _cantController.dispose();
     super.dispose();
@@ -42,10 +63,10 @@ class _FactureFormState extends State<FactureForm> {
   Future<void> _saveFacture() async {
     if (_formKey.currentState!.validate()) {
       final data = {
-        "description": _descriptionController.text,
+        "description": _selectedDescription,
         "category": _selectedCategory.index,
-        "total": double.parse(_totalController.text),
         "cant": int.parse(_cantController.text),
+        "total": double.parse(_totalController.text),
       };
 
       if (widget.isEditing) {
@@ -76,8 +97,24 @@ class _FactureFormState extends State<FactureForm> {
           key: _formKey,
           child: Column(
             children: [
-              _buildTextField("Descripción", "Ingresa la descripción",
-                  _descriptionController),
+              DropdownButtonFormField<String>(
+                value: _selectedDescription,
+                decoration: _inputDecoration("Selecciona una descripción"),
+                items: _descriptions.map((String desc) {
+                  return DropdownMenuItem<String>(
+                    value: desc,
+                    child: Text(desc),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedDescription = newValue;
+                  });
+                },
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Este campo es obligatorio'
+                    : null,
+              ),
               const SizedBox(height: 10),
               DropdownButtonFormField<FactureType>(
                 value: _selectedCategory,
@@ -95,9 +132,9 @@ class _FactureFormState extends State<FactureForm> {
                 },
               ),
               const SizedBox(height: 10),
-              _buildTextField("Total", "0", _totalController, isNumber: true),
-              const SizedBox(height: 10),
               _buildTextField("Cantidad", "0", _cantController, isNumber: true),
+              const SizedBox(height: 10),
+              _buildTextField("Total", "0", _totalController, isNumber: true),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveFacture,

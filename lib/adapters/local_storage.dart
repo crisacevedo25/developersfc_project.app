@@ -7,7 +7,6 @@ class LocalStorage {
     _asyncPrefs = SharedPreferencesAsync();
   }
 
-  // escritura al shared preferences
   Future<void> setLoginStatus(bool logiStatus) async {
     await _asyncPrefs.setBool("isAuthenticated", logiStatus);
   }
@@ -20,7 +19,6 @@ class LocalStorage {
     await _asyncPrefs.clear();
   }
 
-  // lectura de valores
   Future<bool> getLoginStatus() async =>
       await _asyncPrefs.getBool("isAuthenticated") ?? false;
   Future<String> getUser() async => await _asyncPrefs.getString("user") ?? '';
